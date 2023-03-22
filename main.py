@@ -2,7 +2,7 @@ import requests
 import sys
 import re
 
-
+open("files_output.bat", "w").close()
 def request(url):
     try:
         return requests.get("http://" + url)
@@ -25,7 +25,6 @@ def getSubdomains(url):
             target = word + "." + url
             subdomains_response = request(target)
             if subdomains_response:
-                print(target)
                 output_file.write(target + "\n")
         output_file.close()
 
@@ -38,7 +37,6 @@ def getDirectories(url):
             target = url + "/" + word
             directories_response = request(target)
             if directories_response:
-                print(target)
                 output_file.write(target + "\n")
         output_file.close()
 
@@ -49,24 +47,20 @@ def getFiles(url):
         htmlContent = response.content.decode("utf-8")
         files_links = re.findall('(?:href=")(.*?)"', htmlContent)
         for file in files_links:
-            print(file)
 
             testingResponse = request(file)
             if testingResponse:
                 if testingResponse.status_code == 200:
                     testDomain = checkDomain(url, file)
-                    print(str(testDomain) + " link " + file)
                     if testDomain:
                         getFiles(file)
                     else:
-                        print("continue here !!!!!!!!!!!!!!!!!!!!!!!!!")
                         continue
             else:
                 try:
                     testingResponse = requests.get(file)
                     if not testingResponse:
                         link = url + "/" + file
-                        print(link)
                         output_file.write(link + "\n")
                 except requests.exceptions.ConnectionError:
                     pass
@@ -74,7 +68,6 @@ def getFiles(url):
                     pass
                 except requests.exceptions.MissingSchema:
                     link = url + "/" + file
-                    print(link)
                     output_file.write(link + "\n")
 
 
@@ -96,3 +89,4 @@ if response:
 
 else:
     print("invalid url!")
+    sys.exit(0)

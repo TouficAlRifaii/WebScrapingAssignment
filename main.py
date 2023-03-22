@@ -83,7 +83,14 @@ url = sys.argv[1]
 response = request(url)
 if response:
     open("files_output.bat", "w").close()
-    getFiles(url)
+    # getFiles(url)  #this is to get the files hidden inside the url
+    # getSubdomains(url) # this is to get the subdomains
+    # getDirectories(url) # this is used to get the directories of the domain
+    # with open("directories_output.bat" , "r") as file:  # this chunck of code is used to get the files
+    #     for line in file:                               # hidden in the subdirectories of the domain
+    #         directory = line.strip()
+    #         getFiles(directory)
+    #
 else:
     print("invalid url!")
     sys.exit(0)

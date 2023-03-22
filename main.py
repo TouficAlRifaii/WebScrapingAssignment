@@ -1,4 +1,6 @@
 import requests
+import sys
+
 
 
 def request(url):
@@ -19,11 +21,16 @@ def getSubdomains(url):
             target = word + "." + url
             response = request(target)
             if response:
-                print(target + "\n")
+                print(target)
                 output_file.write(target + "\n")
         output_file.close()
 
 
-url = "google.com"
+url = sys.argv[1]
+print("url: " + url)
+response = request(url)
 
-print(getSubdomains(url))
+if response:
+    getSubdomains(url)
+else :
+    print("invalid url!")

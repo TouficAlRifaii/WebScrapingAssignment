@@ -2,7 +2,7 @@ import requests
 import sys
 import re
 
-open("files_output.bat", "w").close()
+
 def request(url):
     try:
         return requests.get("http://" + url)
@@ -80,13 +80,10 @@ def checkDomain(mainDomain, url):
 
 
 url = sys.argv[1]
-# print(checkDomain("testphp.vulnweb.com", "https://www.acunetix.com/vulnerability-scanner/php-security-scanner/"))
-print("url: " + url)
 response = request(url)
-
 if response:
+    open("files_output.bat", "w").close()
     getFiles(url)
-
 else:
     print("invalid url!")
     sys.exit(0)

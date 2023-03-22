@@ -21,7 +21,7 @@ def getSubdomains(url):
     with open("subdomains_dictionary.bat") as file:
         output_file = open("subdomains_output.bat", "w")
         for line in file:
-            word = line.strip()
+            word = re.sub(r"^\s+|\s+$", "", line)
             target = word + "." + url
             subdomains_response = request(target)
             if subdomains_response:
@@ -33,7 +33,7 @@ def getDirectories(url):
     with open("dirs_dictionary.bat") as file:
         output_file = open("directories_output.bat", "w")
         for line in file:
-            word = line.strip()
+            word = re.sub(r"^\s+|\s+$", "", line)
             target = url + "/" + word
             directories_response = request(target)
             if directories_response:
@@ -85,10 +85,10 @@ if response:
     open("files_output.bat", "w").close()
     # getFiles(url)  #this is to get the files hidden inside the url
     # getSubdomains(url) # this is to get the subdomains
-    # getDirectories(url) # this is used to get the directories of the domain
+    getDirectories(url) # this is used to get the directories of the domain
     # with open("directories_output.bat" , "r") as file:  # this chunck of code is used to get the files
     #     for line in file:                               # hidden in the subdirectories of the domain
-    #         directory = line.strip()
+    #         directory = re.sub(r"^\s+|\s+$", "", line)
     #         getFiles(directory)
     #
 else:

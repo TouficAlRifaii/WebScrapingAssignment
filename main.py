@@ -2,7 +2,6 @@ import requests
 import sys
 
 
-
 def request(url):
     try:
         return requests.get("http://" + url)
@@ -19,8 +18,8 @@ def getSubdomains(url):
         for line in file:
             word = line.strip()
             target = word + "." + url
-            response = request(target)
-            if response:
+            subdomains_response = request(target)
+            if subdomains_response:
                 print(target)
                 output_file.write(target + "\n")
         output_file.close()
@@ -32,17 +31,18 @@ def getDirectories(url):
         for line in file:
             word = line.strip()
             target = url + "/" + word
-            response = request(target)
-            if response:
+            directories_response = request(target)
+            if directories_response:
                 print(target)
                 output_file.write(target + "\n")
         output_file.close()
+
 
 url = sys.argv[1]
 print("url: " + url)
 response = request(url)
 
 if response:
-    getDirectories(url)
-else :
+    getSubdomains(url)
+else:
     print("invalid url!")

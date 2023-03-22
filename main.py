@@ -1,5 +1,6 @@
 import requests
 import sys
+import re
 
 
 def request(url):
@@ -36,6 +37,21 @@ def getDirectories(url):
                 print(target)
                 output_file.write(target + "\n")
         output_file.close()
+
+# def getFiles(url):
+#     response = request(url)
+#     htmlContent = response.content.decode("utf-8")
+#     files_links = re.findall('(?:href=")(.*?)"', htmlContent)
+#     for file in files_links:
+#         testingResponse = request(file)
+#         if testingResponse.status_code == 200:
+
+def checkDomain(mainDomain , url):
+    index = url.find(mainDomain)
+    if index != -1:
+        return True
+    else:
+        return False
 
 
 url = sys.argv[1]

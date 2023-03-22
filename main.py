@@ -26,11 +26,23 @@ def getSubdomains(url):
         output_file.close()
 
 
+def getDirectories(url):
+    with open("dirs_dictionary.bat") as file:
+        output_file = open("directories_output.bat", "w")
+        for line in file:
+            word = line.strip()
+            target = url + "/" + word
+            response = request(target)
+            if response:
+                print(target)
+                output_file.write(target + "\n")
+        output_file.close()
+
 url = sys.argv[1]
 print("url: " + url)
 response = request(url)
 
 if response:
-    getSubdomains(url)
+    getDirectories(url)
 else :
     print("invalid url!")

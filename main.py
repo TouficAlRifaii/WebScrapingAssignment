@@ -11,6 +11,10 @@ def request(url):
             return requests.get("https://" + url)
         except requests.exceptions.ConnectionError:
             pass
+        except requests.exceptions.InvalidURL:
+            pass
+    except requests.exceptions.InvalidURL:
+        pass
 
 
 def getSubdomains(url):
@@ -38,15 +42,43 @@ def getDirectories(url):
                 output_file.write(target + "\n")
         output_file.close()
 
-# def getFiles(url):
-#     response = request(url)
-#     htmlContent = response.content.decode("utf-8")
-#     files_links = re.findall('(?:href=")(.*?)"', htmlContent)
-#     for file in files_links:
-#         testingResponse = request(file)
-#         if testingResponse.status_code == 200:
 
-def checkDomain(mainDomain , url):
+def getFiles(url):
+    with open("files_output.bat", "a") as output_file:
+        response = request(url)
+        htmlContent = response.content.decode("utf-8")
+        files_links = re.findall('(?:href=")(.*?)"', htmlContent)
+        for file in files_links:
+            print(file)
+
+            testingResponse = request(file)
+            if testingResponse:
+                if testingResponse.status_code == 200:
+                    testDomain = checkDomain(url, file)
+                    print(str(testDomain) + " link " + file)
+                    if testDomain:
+                        getFiles(file)
+                    else:
+                        print("continue here !!!!!!!!!!!!!!!!!!!!!!!!!")
+                        continue
+            else:
+                try:
+                    testingResponse = requests.get(file)
+                    if not testingResponse:
+                        link = url + "/" + file
+                        print(link)
+                        output_file.write(link + "\n")
+                except requests.exceptions.ConnectionError:
+                    pass
+                except requests.exceptions.InvalidURL:
+                    pass
+                except requests.exceptions.MissingSchema:
+                    link = url + "/" + file
+                    print(link)
+                    output_file.write(link + "\n")
+
+
+def checkDomain(mainDomain, url):
     index = url.find(mainDomain)
     if index != -1:
         return True
@@ -55,10 +87,12 @@ def checkDomain(mainDomain , url):
 
 
 url = sys.argv[1]
+# print(checkDomain("testphp.vulnweb.com", "https://www.acunetix.com/vulnerability-scanner/php-security-scanner/"))
 print("url: " + url)
 response = request(url)
 
 if response:
-    getSubdomains(url)
+    getFiles(url)
+
 else:
     print("invalid url!")
